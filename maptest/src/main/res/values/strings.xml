@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">IntegrationMap</string>
+
+    <string name="google_api_key"></string>
+    <string name="naver_client_id"></string>
+
+</resources>

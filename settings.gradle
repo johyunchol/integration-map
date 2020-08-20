@@ -1,0 +1,2 @@
+include ':maptest', ':integrationmap'
+rootProject.name = "IntegrationMap"
