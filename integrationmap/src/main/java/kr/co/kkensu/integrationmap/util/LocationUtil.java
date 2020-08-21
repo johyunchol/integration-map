@@ -1,12 +1,5 @@
 package kr.co.kkensu.integrationmap.util;
 
-import android.content.Context;
-
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import kr.co.kkensu.integrationmap.MapPoint;
 
 import static java.lang.Math.sqrt;

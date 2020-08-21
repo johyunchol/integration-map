@@ -1,8 +1,6 @@
 package kr.co.kkensu.integrationmap;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.io.Serializable;
 
 /**
@@ -11,11 +9,6 @@ import java.io.Serializable;
 public class MapPoint implements Serializable {
     private double latitude;
     private double longitude;
-
-    @JsonCreator
-    MapPoint() {
-
-    }
 
     public MapPoint(MapPoint mapPoint) {
         this(mapPoint.getLatitude(), mapPoint.getLongitude());
