@@ -43,24 +43,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    /** Retrofit2  **/
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-jackson:2.6.0'
-    implementation 'org.apache.commons:commons-lang3:3.8.1'
-    implementation 'commons-codec:commons-codec:1.11'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.5'
-
-    /** Google **/
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-
-    /** Naver Map **/
-    implementation 'com.naver.maps:map-sdk:3.6.2'
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
