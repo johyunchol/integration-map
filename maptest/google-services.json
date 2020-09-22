@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "618089729743",
+    "firebase_url": "https://integration-map-4c9e9.firebaseio.com",
+    "project_id": "integration-map-4c9e9",
+    "storage_bucket": "integration-map-4c9e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618089729743:android:81d59ff8dde4044b7231ba",
+        "android_client_info": {
+          "package_name": "kr.co.kkensu.integrationmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618089729743-7vgppha4i7up7gfurtrqk5cnmve14bjn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.kkensu.integrationmap",
+            "certificate_hash": "8fd4fa6b6d338dacaef0cedb7b1e67fcad765125"
+          }
+        },
+        {
+          "client_id": "618089729743-ekjvks9s6palsrnncfi4spp6kirsrbkh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.kkensu.integrationmap",
+            "certificate_hash": "ada93ab68a8c867ace711c8f86851f0d823814d1"
+          }
+        },
+        {
+          "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcqQGhUsea67QtuguXtzkEjKK3LLEpKPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
