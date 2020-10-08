@@ -62,6 +62,11 @@ public class MapApiImpl extends BaseMapApi {
     private Runnable zoomListener;
     private HashMap<Marker, MapInfoWindow> mapMarkerInfoWindow = new HashMap<>();
 
+    private List<PolylineOverlay> polylineList = new ArrayList<>();
+    private List<CircleOverlay> circleList = new ArrayList<>();
+    private List<PolygonOverlay> polygonList = new ArrayList<>();
+    private List<Marker> markerList = new ArrayList<>();
+
     private final NaverMap.OnMapClickListener mapOnClickListener = new NaverMap.OnMapClickListener() {
         @Override
         public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
@@ -173,6 +178,8 @@ public class MapApiImpl extends BaseMapApi {
         polygon.setColor(Color.parseColor("#44000000"));
         polygon.setMap(map);
 
+        polygonList.add(polygon);
+
         return new MapPolygonImpl(polygon);
     }
 
@@ -187,6 +194,8 @@ public class MapApiImpl extends BaseMapApi {
         polygon.setHoles(convertToLatLng2(list));
         polygon.setColor(Color.parseColor("#44000000"));
         polygon.setMap(map);
+
+        polygonList.add(polygon);
 
         return new MapPolygonImpl(polygon);
     }
@@ -365,6 +374,8 @@ public class MapApiImpl extends BaseMapApi {
         polyline.setGlobalZIndex(2);
         polyline.setMap(map);
 
+        polylineList.add(polyline);
+
         return new MapPolyLineImpl(polyline);
     }
 
@@ -375,7 +386,26 @@ public class MapApiImpl extends BaseMapApi {
 
     @Override
     public void clear() {
-//        map.clear();
+        for (PolylineOverlay polyline : polylineList) {
+            polyline.setMap(null);
+        }
+        polylineList.clear();
+
+        for (CircleOverlay circle : circleList) {
+            circle.setMap(null);
+        }
+        circleList.clear();
+
+        for (PolygonOverlay polygon : polygonList) {
+            polygon.setMap(null);
+        }
+        polygonList.clear();
+
+
+        for (Marker marker : markerList) {
+            marker.setMap(null);
+        }
+        markerList.clear();
     }
 
     @Override
@@ -388,6 +418,8 @@ public class MapApiImpl extends BaseMapApi {
         circle.setGlobalZIndex(100);
         circle.setOutlineColor(strokeColor);
         circle.setMap(map);
+
+        circleList.add(circle);
 
         return new MapCircleImpl(circle);
     }
@@ -469,6 +501,8 @@ public class MapApiImpl extends BaseMapApi {
             });
 //            marker.showInfoWindow();
         }
+
+        markerList.add(marker);
 
         return new MapMarkerImpl(marker);
     }
