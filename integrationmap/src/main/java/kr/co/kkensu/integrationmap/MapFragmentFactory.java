@@ -1,12 +1,14 @@
 package kr.co.kkensu.integrationmap;
 
+import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 
 /**
  * 지도 종류에 따른 MapFragment 반환
  */
 public class MapFragmentFactory {
-    public static Fragment create(MapType mapType) {
+    public static Fragment create(Context context, MapType mapType) {
         Fragment fragment = null;
         switch (mapType) {
             case KAKAO_MAP:
@@ -19,6 +21,10 @@ public class MapFragmentFactory {
             default:
             case GOOGLE_MAP:
                 fragment = new kr.co.kkensu.integrationmap.googlemap.MapFragmentImpl();
+                break;
+
+            case TMAP:
+                fragment = new kr.co.kkensu.integrationmap.tmap.MapFragmentImpl(context);
                 break;
         }
         return fragment;

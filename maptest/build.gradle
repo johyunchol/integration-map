@@ -65,5 +65,5 @@ dependencies {
     implementation project(':integrationmap')
 
     /** Tmap Sdk **/
-//    implementation files('libs/com.skt.Tmap_1.66.jar')
+    implementation files('libs/com.skt.Tmap_1.66.jar')
 }

@@ -12,7 +12,7 @@ import kr.co.kkensu.integrationmap.*
 class MainActivity : AppCompatActivity() {
 
     private var mapApi: MapApi? = null
-    private var mapType = MapType.GOOGLE_MAP
+    private var mapType = MapType.TMAP
 
     private var polyLine: MapPolyLine? = null
     private var circle: MapCircle? = null
@@ -51,18 +51,18 @@ class MainActivity : AppCompatActivity() {
         val childFragmentManager: FragmentManager = supportFragmentManager
         var fragment: Fragment? = childFragmentManager.findFragmentByTag("TAG_MAP")
         if (fragment == null) {
-            fragment = MapFragmentFactory.create(mapType)
+            fragment = MapFragmentFactory.create(this, mapType)
             childFragmentManager.beginTransaction()
                 .replace(R.id.map, fragment)
                 .commit()
         }
         val mapFragment: MapFragment? = fragment as MapFragment?
-        mapFragment?.getMapApi({ result ->
+        mapFragment?.getMapApi { result ->
             mapApi = result
             // 지도 준비 완료시 초기화
             init()
 //            mapLocationSetting()
-        })
+        }
     }
 
     private fun init() {

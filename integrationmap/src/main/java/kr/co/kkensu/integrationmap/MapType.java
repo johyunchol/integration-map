@@ -6,7 +6,9 @@ package kr.co.kkensu.integrationmap;
 public enum MapType {
     GOOGLE_MAP("Google Map"),
     KAKAO_MAP("Kakao Map"),
-    NAVER_MAP("Naver Map");
+    NAVER_MAP("Naver Map"),
+    TMAP("TMap"),
+    ;
 
     private String name;
 

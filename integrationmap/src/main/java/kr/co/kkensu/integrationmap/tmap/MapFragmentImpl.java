@@ -1,4 +1,4 @@
-package kr.co.kkensu.integrationmap.navermap;
+package kr.co.kkensu.integrationmap.tmap;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,32 +10,42 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.OnMapReadyCallback;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.skt.Tmap.TMapView;
 
 import kr.co.kkensu.integrationmap.MapApi;
 import kr.co.kkensu.integrationmap.MapFragment;
+import kr.co.kkensu.maptest.R;
 
-public class MapFragmentImpl extends com.naver.maps.map.MapFragment implements MapFragment {
+public class MapFragmentImpl extends Fragment implements MapFragment {
 
+    private Context context;
+    private TMapView tMapView;
     private View.OnTouchListener listener;
     private TouchableWrapper touchableWrapper;
     private ScrollView scrollView;
 
+    public MapFragmentImpl(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void getMapApi(final MapApi.MapCallback<MapApi> callback) {
-        getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull NaverMap naverMap) {
-                callback.handle(new MapApiImpl(naverMap, MapFragmentImpl.this));
-            }
-        });
+        callback.handle(new MapApiImpl(new TMapView(context), MapFragmentImpl.this));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.tmap_view, container, false);
+        ViewGroup viewGroup = view.findViewById(R.id.tmapView);
+        tMapView = new TMapView(getActivity());
+        viewGroup.addView(tMapView);
+
         touchableWrapper = new TouchableWrapper(getActivity());
         touchableWrapper.addView(view);
         return touchableWrapper;

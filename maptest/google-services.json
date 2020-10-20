@@ -8,6 +8,46 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:618089729743:android:21a5a46e3e1d33297231ba",
+        "android_client_info": {
+          "package_name": "kr.co.kkensu.integration_map_sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618089729743-ehsppr5l60vbi0nmd647uehlctn26ua5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.kkensu.integration_map_sample",
+            "certificate_hash": "8fd4fa6b6d338dacaef0cedb7b1e67fcad765125"
+          }
+        },
+        {
+          "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcqQGhUsea67QtuguXtzkEjKK3LLEpKPA"
+        },
+        {
+          "current_key": "AIzaSyBWTRH1MYKGQy6g0ebPbel4ZbuN23rFauQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:618089729743:android:81d59ff8dde4044b7231ba",
         "android_client_info": {
           "package_name": "kr.co.kkensu.integrationmap"
@@ -38,6 +78,49 @@
       "api_key": [
         {
           "current_key": "AIzaSyBcqQGhUsea67QtuguXtzkEjKK3LLEpKPA"
+        },
+        {
+          "current_key": "AIzaSyBWTRH1MYKGQy6g0ebPbel4ZbuN23rFauQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618089729743:android:e813e0d17cd1cc0d7231ba",
+        "android_client_info": {
+          "package_name": "kr.co.kkensu.maptest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618089729743-m3l9ekeas2fprjkob5sd8o9349dv2s0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.kkensu.maptest",
+            "certificate_hash": "77cf8104e4c0d8b2c15997556bb482775e419baf"
+          }
+        },
+        {
+          "client_id": "618089729743-i88bbdvlb3bo37c5od0civhd1n3r5q19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcqQGhUsea67QtuguXtzkEjKK3LLEpKPA"
+        },
+        {
+          "current_key": "AIzaSyBWTRH1MYKGQy6g0ebPbel4ZbuN23rFauQ"
         }
       ],
       "services": {
