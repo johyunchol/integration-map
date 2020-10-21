@@ -34,6 +34,7 @@ import kr.co.kkensu.integrationmap.MapCircle;
 import kr.co.kkensu.integrationmap.MapInfoWindow;
 import kr.co.kkensu.integrationmap.MapMarker;
 import kr.co.kkensu.integrationmap.MapMarkerIcon;
+import kr.co.kkensu.integrationmap.MapMarkerOptions;
 import kr.co.kkensu.integrationmap.MapPoint;
 import kr.co.kkensu.integrationmap.MapPolyLine;
 import kr.co.kkensu.integrationmap.MapPolygon;
@@ -70,39 +71,6 @@ public class MapApiImpl extends BaseMapApi {
 
     public MapApiImpl(GoogleMap googleMap, MapFragmentImpl mapFragment) {
         map = googleMap;
-//        map.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-//            @Override
-//            public void onCameraMoveStarted(int i) {
-//                isMoving = true;
-//                LogUtil.e(JHC_DEBUG, "onCameraMoveStarted");
-//                if (cameraMoveListener != null) {
-//                    if (!isMoving) {
-//                        lastMapPoint = null;
-//                    } else {
-//                        lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
-//                    }
-//                    lastZoomLevel = map.getCameraPosition().zoom;
-//                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
-//                }
-//            }
-//        });
-
-//        map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-//            @Override
-//            public void onCameraIdle() {
-//                isMoving = false;
-//                LogUtil.e(JHC_DEBUG, "onCameraIdle");
-//                if (cameraMoveListener != null) {
-//                    if (!isMoving) {
-//                        lastMapPoint = null;
-//                    } else {
-//                        lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
-//                    }
-//                    lastZoomLevel = map.getCameraPosition().zoom;
-//                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
-//                }
-//            }
-//        });
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -369,65 +337,30 @@ public class MapApiImpl extends BaseMapApi {
 
 
     @Override
-    public MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType anchorType, MapInfoWindow mapInfoWindow) {
+//    public MapMarker addMarker(final MapPoint result, final MapMarkerIcon icon, float rotation, float zIndex, AnchorType anchorType, MapInfoWindow mapInfoWindow) {
+    public MapMarker addMarker(MapMarkerOptions options) {
         MarkerOptions markerOptions = new MarkerOptions()
-                .position(new LatLng(result.getLatitude(), result.getLongitude()));
+                .position(new LatLng(options.getMapPoint().getLatitude(), options.getMapPoint().getLongitude()));
 
-        if (mapMarkerIcon != null) {
-            switch (mapMarkerIcon.getMapType()) {
-                case TYPE_VIEW:
-                    View markerView = (View) mapMarkerIcon.getMarkerName();
-                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.createDrawableFromView(mapFragment.getContext(), markerView)));
-                    break;
-
-                case TYPE_RESOURCE:
-                    Bitmap bitmap = BitmapUtil.getBitmapFromAsset(mapFragment.getContext(), "image/" + mapMarkerIcon.getMarkerName() + ".png");
-
-                    int width = 0;
-                    int height = 0;
-                    width = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getWidth());
-                    height = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getHeight());
-
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
-                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(scaledBitmap));
-                    break;
-            }
+        if (options.getMapMarkerIcon() != null) {
+            View markerView = options.getMapMarkerIcon().getMarkerView();
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.createDrawableFromView(mapFragment.getContext(), markerView)));
         }
 
-        switch (anchorType) {
-            case TYPE_CENTER_TOP:
-                markerOptions.anchor(0.5f, 0f);
-                break;
+        markerOptions.anchor(options.getAnchorX(), options.getAnchorY());
 
-            case TYPE_CENTER_TOP_20:
-                markerOptions.anchor(0.5f, 0.2f);
-                break;
-
-            case TYPE_CENTER_CENTER:
-                markerOptions.anchor(0.5f, 0.5f);
-                break;
-
-            case TYPE_CENTER_BOTTOM:
-            default:
-                markerOptions.anchor(0.5f, 1f);
-                break;
+        if (options.getRotation() != 0) {
+            markerOptions.rotation(options.getRotation());
         }
 
-        if (rotation != 0)
-            markerOptions.rotation(rotation);
-
-        if (zIndex > 0) {
-            markerOptions.zIndex(zIndex);
-        }
+        markerOptions.zIndex(options.getzIndex());
 
         Marker marker = map.addMarker(markerOptions);
 
-        if (mapInfoWindow != null) {
+        if (options.getMapInfoWindow() != null) {
             if (!mapMarkerInfoWindow.containsKey(marker)) {
-                mapMarkerInfoWindow.put(marker, mapInfoWindow);
+                mapMarkerInfoWindow.put(marker, options.getMapInfoWindow());
             }
-
-//            setInfoWindow(mapInfoWindow);
 
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
@@ -442,14 +375,12 @@ public class MapApiImpl extends BaseMapApi {
                     return false;
                 }
             });
-
-//            marker.showInfoWindow();
         }
 
         return new MapMarkerImpl(marker);
     }
 
-    private void setInfoWindow(MapInfoWindow mapInfoWindow) {
+/*    private void setInfoWindow(MapInfoWindow mapInfoWindow) {
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -494,7 +425,7 @@ public class MapApiImpl extends BaseMapApi {
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public MapPoint getCenter() {

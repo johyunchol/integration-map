@@ -2,6 +2,8 @@ package kr.co.kkensu.maptest
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -12,7 +14,7 @@ import kr.co.kkensu.integrationmap.*
 class MainActivity : AppCompatActivity() {
 
     private var mapApi: MapApi? = null
-    private var mapType = MapType.TMAP
+    private var mapType = MapType.GOOGLE_MAP
 
     private var polyLine: MapPolyLine? = null
     private var circle: MapCircle? = null
@@ -76,17 +78,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         mapApi?.setCenter(MapPoint(37.505762, 127.045092), 17f, true)
-        mapApi?.addMarker(MapPoint(37.505762, 127.045092))
+//        mapApi?.addMarker(MapPoint(37.505762, 127.045092))
+
+        val options = MapMarkerOptions()
+        options.mapPoint = MapPoint(37.505762, 127.045092)
+        options.mapMarkerIcon = MapMarkerFactory.createMarker(this, R.drawable.ic_pin_recommend)
+//            options.setMapMarkerClickListener(object : MapMarkerClickListener {
+//                override fun onClick(view: View?) {
+//                    Toast.makeText(this@MainActivity, "Test", Toast.LENGTH_SHORT).show()
+//                }
+//
+//            })
 
         btnPolyline.setOnClickListener {
             removeAll()
             val list: MutableList<MapPoint> = ArrayList()
             list.add(MapPoint(37.505804, 127.043628))
             list.add(MapPoint(37.505190, 127.045111))
-            polyLine = mapApi?.addPolyline(list)
+//            polyLine = mapApi?.addPolyline(list)
 
 //            mapApi?.center = MapPoint(37.505497, 127.0443695)
-            mapApi?.zoom(list, 0, 0, true)
+//            mapApi?.zoom(list, 0, 0, true)
+
+            mapApi?.addMarker(options)
+
         }
 
         btnCircle.setOnClickListener {

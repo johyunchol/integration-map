@@ -2,12 +2,8 @@ package kr.co.kkensu.integrationmap;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.StringRes;
-
-import java.io.Serializable;
-import java.util.List;
 
 public abstract class MapMarkerOptionsBuilder<T extends MapMarkerOptionsBuilder> {
 
@@ -19,6 +15,10 @@ public abstract class MapMarkerOptionsBuilder<T extends MapMarkerOptionsBuilder>
      * 마커의 좌표
      **/
     private MapPoint mapPoint = null;
+    private MapMarkerIcon mapMarkerIcon = null;
+    private MapMarkerClickListener mapMarkerClickListener = null;
+    private MapInfoWindow mapInfoWindow = null;
+    private MapInfoWindowClickListener mapInfoWindowClickListener = null;
 
     /**
      * 마커의 어느 위치가 지도의 좌표를 표시할지
@@ -76,14 +76,47 @@ public abstract class MapMarkerOptionsBuilder<T extends MapMarkerOptionsBuilder>
         return (T) this;
     }
 
+    public T setMapMarkerIcon(MapMarkerIcon mapMarkerIcon) {
+        this.mapMarkerIcon = mapMarkerIcon;
+        return (T) this;
+    }
+
+    public T setMapMarkerClickListener(MapMarkerClickListener listener) {
+        this.mapMarkerClickListener = listener;
+        return (T) this;
+    }
+
+    public T setMapInfWindow(MapInfoWindow mapInfWindow) {
+        this.mapInfoWindow = mapInfWindow;
+        return (T) this;
+    }
+
+    public T setMapInfoWindowClickListener(MapInfoWindowClickListener listener) {
+        this.mapInfoWindowClickListener = listener;
+        return (T) this;
+    }
+
     public T setAnchor(float anchorX, float anchorY) {
         this.anchorX = anchorX;
         this.anchorY = anchorY;
         return (T) this;
     }
 
+
     public MapPoint getMapPoint() {
         return this.mapPoint;
+    }
+
+    public MapMarkerClickListener getMapMarkerClickListener() {
+        return mapMarkerClickListener;
+    }
+
+    public MapInfoWindow getMapInfoWindow() {
+        return mapInfoWindow;
+    }
+
+    public MapInfoWindowClickListener getMapInfoWindowClickListener() {
+        return mapInfoWindowClickListener;
     }
 
     public float getAnchorX() {
@@ -93,4 +126,6 @@ public abstract class MapMarkerOptionsBuilder<T extends MapMarkerOptionsBuilder>
     public float getAnchorY() {
         return anchorY;
     }
+
+
 }

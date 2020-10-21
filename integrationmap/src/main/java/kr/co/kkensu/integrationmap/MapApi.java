@@ -58,13 +58,15 @@ public interface MapApi {
 
     MapCircle addCircle(MapPoint point, float radiusInMeter, int fillColor, float strokeWidth, int strokeColor);
 
-    MapMarker addMarker(MapPoint result);
+//    MapMarker addMarker(MapPoint result);
+//
+//    MapMarker addMarker(MapPoint myPoint, MapMarkerIcon mapMarkerIcon);
+//
+//    MapMarker addMarker(MapPoint myPoint, MapMarkerIcon mapMarkerIcon, MapInfoWindow mapInfoWindow);
+//
+//    MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType center, MapInfoWindow mapInfoWindow);
 
-    MapMarker addMarker(MapPoint myPoint, MapMarkerIcon mapMarkerIcon);
-
-    MapMarker addMarker(MapPoint myPoint, MapMarkerIcon mapMarkerIcon, MapInfoWindow mapInfoWindow);
-
-    MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType center, MapInfoWindow mapInfoWindow);
+    MapMarker addMarker(MapMarkerOptions mapMarkerOptions);
 
     MapPoint getCenter();
 

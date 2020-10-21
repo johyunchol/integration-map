@@ -38,6 +38,7 @@ import kr.co.kkensu.integrationmap.MapCircle;
 import kr.co.kkensu.integrationmap.MapInfoWindow;
 import kr.co.kkensu.integrationmap.MapMarker;
 import kr.co.kkensu.integrationmap.MapMarkerIcon;
+import kr.co.kkensu.integrationmap.MapMarkerOptions;
 import kr.co.kkensu.integrationmap.MapPoint;
 import kr.co.kkensu.integrationmap.MapPolyLine;
 import kr.co.kkensu.integrationmap.MapPolygon;
@@ -425,63 +426,30 @@ public class MapApiImpl extends BaseMapApi {
     }
 
     @Override
-    public MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType anchorType, MapInfoWindow mapInfoWindow) {
+    public MapMarker addMarker(MapMarkerOptions options) {
         Marker marker = new Marker();
 
-        marker.setPosition(new LatLng(result.getLatitude(), result.getLongitude()));
+        marker.setPosition(new LatLng(options.getMapPoint().getLatitude(), options.getMapPoint().getLongitude()));
 
-        if (mapMarkerIcon != null) {
-            switch (mapMarkerIcon.getMapType()) {
-                case TYPE_VIEW:
-                    View markerView = (View) mapMarkerIcon.getMarkerName();
-                    marker.setIcon(OverlayImage.fromBitmap(BitmapUtil.createDrawableFromView(mapFragment.getContext(), markerView)));
-                    break;
-
-                case TYPE_RESOURCE:
-                    Bitmap bitmap = BitmapUtil.getBitmapFromAsset(mapFragment.getContext(), "image/" + mapMarkerIcon.getMarkerName() + ".png");
-
-                    int width = 0;
-                    int height = 0;
-                    width = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getWidth());
-                    height = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getHeight());
-
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
-                    marker.setIcon(OverlayImage.fromBitmap(scaledBitmap));
-                    break;
-            }
+        if (options.getMapMarkerIcon() != null) {
+            View markerView = options.getMapMarkerIcon().getMarkerView();
+            marker.setIcon(OverlayImage.fromBitmap(BitmapUtil.createDrawableFromView(mapFragment.getContext(), markerView)));
         }
 
-        switch (anchorType) {
-            case TYPE_CENTER_TOP:
-                marker.setAnchor(new PointF(0.5f, 0f));
-                break;
+        marker.setAnchor(new PointF(options.getAnchorX(), options.getAnchorY()));
 
-            case TYPE_CENTER_TOP_20:
-                marker.setAnchor(new PointF(0.5f, 0.2f));
-                break;
+        if (options.getRotation() != 0)
+            marker.setAngle(options.getRotation());
 
-            case TYPE_CENTER_CENTER:
-                marker.setAnchor(new PointF(0.5f, 0.5f));
-                break;
-
-            case TYPE_CENTER_BOTTOM:
-            default:
-                marker.setAnchor(new PointF(0.5f, 1f));
-                break;
-        }
-
-        if (rotation != 0)
-            marker.setAngle(rotation);
-
-        if (zIndex > 0) {
-            marker.setGlobalZIndex((int) zIndex);
+        if (options.getzIndex() > 0) {
+            marker.setGlobalZIndex((int) options.getzIndex());
         }
 
         marker.setMap(map);
 
-        if (mapInfoWindow != null) {
+        if (options.getMapInfoWindow() != null) {
             if (!mapMarkerInfoWindow.containsKey(marker)) {
-                mapMarkerInfoWindow.put(marker, mapInfoWindow);
+                mapMarkerInfoWindow.put(marker, options.getMapInfoWindow());
             }
 
 //            setInfoWindow(mapInfoWindow, marker);
@@ -507,53 +475,53 @@ public class MapApiImpl extends BaseMapApi {
         return new MapMarkerImpl(marker);
     }
 
-    private void setInfoWindow(MapInfoWindow mapInfoWindow, Marker marker) {
-        InfoWindow infoWindow = new InfoWindow();
-        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
-            @NonNull
-            @Override
-            public View getView(@NonNull InfoWindow infoWindow) {
-                MapInfoWindow mapInfoWindow1 = mapMarkerInfoWindow.get(marker);
-
-                if (mapInfoWindow1 != null) {
-                    View view = mapInfoWindow1.getView();
-                    if (view == null) {
-                        view = LayoutInflater.from(mapFragment.getContext()).inflate(R.layout.view_map_info_window_go_to_navigation, null);
-
-                        //                    TextView txtName = Util.findView(view, R.id.txtName);
-                        TextView txtAddress = view.findViewById(R.id.txtAddress);
-
-//                    txtName.setText(mapInfoWindow.getName());
-                        String address;
-                        if (mapInfoWindow.getAddress().length() > 20) {
-                            address = mapInfoWindow.getAddress().substring(0, 20);
-                            address += "...";
-                        } else {
-                            address = mapInfoWindow.getAddress();
-                        }
-
-                        txtAddress.setText(address);
-                    }
-                    return view;
-                }
-
-                return null;
-            }
-        });
-
-        infoWindow.setOnClickListener(new Overlay.OnClickListener() {
-            @Override
-            public boolean onClick(@NonNull Overlay overlay) {
-                if (mapMarkerInfoWindow.get(marker).getRunnable() != null) {
-                    mapMarkerInfoWindow.get(marker).getRunnable().run();
-                }
-
-                return false;
-            }
-        });
-
-        infoWindow.setMap(map);
-    }
+//    private void setInfoWindow(MapInfoWindow mapInfoWindow, Marker marker) {
+//        InfoWindow infoWindow = new InfoWindow();
+//        infoWindow.setAdapter(new InfoWindow.ViewAdapter() {
+//            @NonNull
+//            @Override
+//            public View getView(@NonNull InfoWindow infoWindow) {
+//                MapInfoWindow mapInfoWindow1 = mapMarkerInfoWindow.get(marker);
+//
+//                if (mapInfoWindow1 != null) {
+//                    View view = mapInfoWindow1.getView();
+//                    if (view == null) {
+//                        view = LayoutInflater.from(mapFragment.getContext()).inflate(R.layout.view_map_info_window_go_to_navigation, null);
+//
+//                        //                    TextView txtName = Util.findView(view, R.id.txtName);
+//                        TextView txtAddress = view.findViewById(R.id.txtAddress);
+//
+////                    txtName.setText(mapInfoWindow.getName());
+//                        String address;
+//                        if (mapInfoWindow.getAddress().length() > 20) {
+//                            address = mapInfoWindow.getAddress().substring(0, 20);
+//                            address += "...";
+//                        } else {
+//                            address = mapInfoWindow.getAddress();
+//                        }
+//
+//                        txtAddress.setText(address);
+//                    }
+//                    return view;
+//                }
+//
+//                return null;
+//            }
+//        });
+//
+//        infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+//            @Override
+//            public boolean onClick(@NonNull Overlay overlay) {
+//                if (mapMarkerInfoWindow.get(marker).getRunnable() != null) {
+//                    mapMarkerInfoWindow.get(marker).getRunnable().run();
+//                }
+//
+//                return false;
+//            }
+//        });
+//
+//        infoWindow.setMap(map);
+//    }
 
     @Override
     public MapPoint getCenter() {

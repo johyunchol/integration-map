@@ -71,46 +71,46 @@ public class MapInfoWindow {
         this.runnable = runnable;
     }
 
-    public static View getInfoWindowGotoNavigation(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_go_to_navigation, null);
-        return view;
-    }
-
-    public static View getInfowWindowDistanceTime(Context context, Integer distance, Integer time) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_distance_time, null);
-
-        TextView distanceText = view.findViewById(R.id.distanceText);
-        TextView timeText = view.findViewById(R.id.timeText);
-
-        if (distance >= 1000) {
-            distanceText.setText(String.format("약 %.1fkm", LocationUtil.distanceKM(distance)));
-        } else {
-            distanceText.setText(String.format("약 %dm", distance));
-        }
-
-        timeText.setText(String.format("%s", TimeUtil.formatTime(time)));
-
-        return view;
-    }
-
-    public static View getInfowWindowTime(Context context, String time) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_time, null);
-
-        TextView timeText = view.findViewById(R.id.timeText);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-
-        Date date = null;
-        try {
-            date = sdf.parse(time);
-            time = sdf2.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        timeText.setText(String.format("%s", time));
-
-        return view;
-    }
+//    public static View getInfoWindowGotoNavigation(Context context) {
+//        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_go_to_navigation, null);
+//        return view;
+//    }
+//
+//    public static View getInfowWindowDistanceTime(Context context, Integer distance, Integer time) {
+//        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_distance_time, null);
+//
+//        TextView distanceText = view.findViewById(R.id.distanceText);
+//        TextView timeText = view.findViewById(R.id.timeText);
+//
+//        if (distance >= 1000) {
+//            distanceText.setText(String.format("약 %.1fkm", LocationUtil.distanceKM(distance)));
+//        } else {
+//            distanceText.setText(String.format("약 %dm", distance));
+//        }
+//
+//        timeText.setText(String.format("%s", TimeUtil.formatTime(time)));
+//
+//        return view;
+//    }
+//
+//    public static View getInfowWindowTime(Context context, String time) {
+//        View view = LayoutInflater.from(context).inflate(R.layout.view_map_info_window_time, null);
+//
+//        TextView timeText = view.findViewById(R.id.timeText);
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+//
+//        Date date = null;
+//        try {
+//            date = sdf.parse(time);
+//            time = sdf2.format(date);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        timeText.setText(String.format("%s", time));
+//
+//        return view;
+//    }
 }

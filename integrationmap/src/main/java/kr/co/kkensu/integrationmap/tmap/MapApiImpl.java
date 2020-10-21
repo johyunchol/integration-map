@@ -1,37 +1,12 @@
 package kr.co.kkensu.integrationmap.tmap;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.RoundCap;
-import com.naver.maps.map.overlay.CircleOverlay;
-import com.naver.maps.map.overlay.PolygonOverlay;
-import com.naver.maps.map.overlay.PolylineOverlay;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapMarkerItem2;
@@ -47,19 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
 
-import kr.co.kkensu.integrationmap.AnchorType;
 import kr.co.kkensu.integrationmap.BaseMapApi;
 import kr.co.kkensu.integrationmap.MapCircle;
 import kr.co.kkensu.integrationmap.MapInfoWindow;
 import kr.co.kkensu.integrationmap.MapMarker;
-import kr.co.kkensu.integrationmap.MapMarkerIcon;
+import kr.co.kkensu.integrationmap.MapMarkerOptions;
 import kr.co.kkensu.integrationmap.MapPoint;
 import kr.co.kkensu.integrationmap.MapPolyLine;
 import kr.co.kkensu.integrationmap.MapPolygon;
 import kr.co.kkensu.integrationmap.util.AsyncRun;
 import kr.co.kkensu.integrationmap.util.BitmapUtil;
-import kr.co.kkensu.integrationmap.util.ScreenUtil;
-import kr.co.kkensu.maptest.R;
 
 public class MapApiImpl extends BaseMapApi {
     public static final int ANIMATION_TIME = 300;
@@ -401,51 +373,21 @@ public class MapApiImpl extends BaseMapApi {
         return new MapCircleImpl(map, circle);
     }
 
-
     @Override
-    public MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType anchorType, MapInfoWindow mapInfoWindow) {
+    public MapMarker addMarker(MapMarkerOptions options) {
+//    public MapMarker addMarker(final MapPoint result, final MapMarkerIcon mapMarkerIcon, float rotation, float zIndex, AnchorType anchorType, MapInfoWindow mapInfoWindow) {
         TMapMarkerItem2 marker = new TMapMarkerItem2();
-        marker.setTMapPoint(new TMapPoint(result.getLatitude(), result.getLongitude()));
+        marker.setTMapPoint(new TMapPoint(options.getMapPoint().getLatitude(), options.getMapPoint().getLongitude()));
 
-        if (mapMarkerIcon != null) {
-            switch (mapMarkerIcon.getMapType()) {
-                case TYPE_VIEW:
-                    View markerView = (View) mapMarkerIcon.getMarkerName();
+        mapFragment.getView().post(new Runnable() {
+            @Override
+            public void run() {
+                if (options.getMapMarkerIcon() != null) {
+                    View markerView = options.getMapMarkerIcon().getMarkerView();
                     marker.setIcon(BitmapUtil.createDrawableFromView(mapFragment.getContext(), markerView));
-                    break;
+                }
 
-                case TYPE_RESOURCE:
-                    Bitmap bitmap = BitmapUtil.getBitmapFromAsset(mapFragment.getContext(), "image/" + mapMarkerIcon.getMarkerName() + ".png");
-
-                    int width = 0;
-                    int height = 0;
-                    width = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getWidth());
-                    height = (int) ScreenUtil.dipToPixel(mapFragment.getContext(), mapMarkerIcon.getMarkerSize().getHeight());
-
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
-                    marker.setIcon(scaledBitmap);
-                    break;
-            }
-        }
-
-        switch (anchorType) {
-            case TYPE_CENTER_TOP:
-                marker.setPosition(0.5f, 0f);
-                break;
-
-            case TYPE_CENTER_TOP_20:
-                marker.setPosition(0.5f, 0.2f);
-                break;
-
-            case TYPE_CENTER_CENTER:
-                marker.setPosition(0.5f, 0.5f);
-                break;
-
-            case TYPE_CENTER_BOTTOM:
-            default:
-                marker.setPosition(0.5f, 1f);
-                break;
-        }
+                marker.setPosition(options.getAnchorX(), options.getAnchorY());
 
 //        if (rotation != 0)
 //            markerOptions.rotation(rotation);
@@ -455,28 +397,31 @@ public class MapApiImpl extends BaseMapApi {
 //        }
 
 //        Marker marker = map.addMarker(markerOptions);
-        int id = markerList.size() + 1;
-        map.addMarkerItem2(String.valueOf(id), marker);
+                int id = markerList.size() + 1;
+                map.addMarkerItem2(String.valueOf(id), marker);
 
-        if (mapInfoWindow != null) {
-            if (!mapMarkerInfoWindow.containsKey(marker)) {
-                mapMarkerInfoWindow.put(marker, mapInfoWindow);
-            }
+                if (options.getMapInfoWindow() != null) {
+                    if (!mapMarkerInfoWindow.containsKey(marker)) {
+                        mapMarkerInfoWindow.put(marker, options.getMapInfoWindow());
+                    }
 
 //            setInfoWindow(mapInfoWindow);
 
-            map.setOnMarkerClickEvent(new TMapView.OnCalloutMarker2ClickCallback() {
-                @Override
-                public void onCalloutMarker2ClickEvent(String s, TMapMarkerItem2 tMapMarkerItem2) {
-                    MapInfoWindow mapInfoWindow1 = mapMarkerInfoWindow.get(marker);
+                    map.setOnMarkerClickEvent(new TMapView.OnCalloutMarker2ClickCallback() {
+                        @Override
+                        public void onCalloutMarker2ClickEvent(String s, TMapMarkerItem2 tMapMarkerItem2) {
+                            MapInfoWindow mapInfoWindow1 = mapMarkerInfoWindow.get(marker);
 
-                    if (mapInfoWindow1 != null) {
-                        if (mapInfoWindow1.getRunnable() != null)
-                            mapInfoWindow1.getRunnable().run();
-                    }
+                            if (mapInfoWindow1 != null) {
+                                if (mapInfoWindow1.getRunnable() != null)
+                                    mapInfoWindow1.getRunnable().run();
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+
 
         return new MapMarkerImpl(map, marker);
     }

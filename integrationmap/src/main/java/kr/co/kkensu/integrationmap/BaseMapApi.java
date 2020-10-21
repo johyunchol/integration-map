@@ -103,20 +103,20 @@ public abstract class BaseMapApi implements MapApi {
     }
 
 
-    @Override
-    final public MapMarker addMarker(MapPoint point) {
-        return addMarker(point, null, 0, 0, AnchorType.TYPE_DEFAULT, null);
-    }
-
-    @Override
-    final public MapMarker addMarker(MapPoint point, MapMarkerIcon mapMarkerIcon) {
-        return addMarker(point, mapMarkerIcon, 0, 0, AnchorType.TYPE_DEFAULT, null);
-    }
-
-    @Override
-    public MapMarker addMarker(MapPoint point, MapMarkerIcon mapMarkerIcon, MapInfoWindow mapInfoWindow) {
-        return addMarker(point, mapMarkerIcon, 0, 0, AnchorType.TYPE_DEFAULT, mapInfoWindow);
-    }
+//    @Override
+//    final public MapMarker addMarker(MapPoint point) {
+//        return addMarker(point, null, 0, 0, AnchorType.TYPE_DEFAULT, null);
+//    }
+//
+//    @Override
+//    final public MapMarker addMarker(MapPoint point, MapMarkerIcon mapMarkerIcon) {
+//        return addMarker(point, mapMarkerIcon, 0, 0, AnchorType.TYPE_DEFAULT, null);
+//    }
+//
+//    @Override
+//    public MapMarker addMarker(MapPoint point, MapMarkerIcon mapMarkerIcon, MapInfoWindow mapInfoWindow) {
+//        return addMarker(point, mapMarkerIcon, 0, 0, AnchorType.TYPE_DEFAULT, mapInfoWindow);
+//    }
 
     @Override
     final public void setCamera(MapPoint point, float bearing, float tilt, float zoomLevel) {

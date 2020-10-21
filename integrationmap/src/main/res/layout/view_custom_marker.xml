@@ -54,13 +54,11 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <ImageView
             android:id="@+id/imgMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_pin_recommend"
-            android:gravity="center"
-            android:orientation="vertical" />
+            android:gravity="center" />
     </LinearLayout>
 </FrameLayout>
