@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -75,10 +77,10 @@ public class MapApiImpl extends BaseMapApi {
     private Runnable zoomListener;
     private HashMap<TMapMarkerItem2, MapInfoWindow> mapMarkerInfoWindow = new HashMap<>();
 
-    private List<PolylineOverlay> polylineList = new ArrayList<>();
-    private List<CircleOverlay> circleList = new ArrayList<>();
-    private List<PolygonOverlay> polygonList = new ArrayList<>();
-    private List<com.naver.maps.map.overlay.Marker> markerList = new ArrayList<>();
+    private List<TMapPolyLine> polylineList = new ArrayList<>();
+    private List<TMapCircle> circleList = new ArrayList<>();
+    private List<TMapPolygon> polygonList = new ArrayList<>();
+    private List<TMapMarkerItem2> markerList = new ArrayList<>();
 
     private final TMapView.OnClickListenerCallback mapOnClickListener = new TMapView.OnClickListenerCallback() {
         @Override
@@ -97,11 +99,11 @@ public class MapApiImpl extends BaseMapApi {
         }
     };
 
-    public MapApiImpl(TMapView tMapView, MapFragmentImpl mapFragment) {
+    public MapApiImpl(TMapView tMapView, MapFragmentImpl mapFragment, String apiKey) {
         this.mapFragment = mapFragment;
 
         map = tMapView;
-        map.setSKTMapApiKey("2b128a6d-c516-4e18-a837-2aae0bf4a3c8");
+        map.setSKTMapApiKey(apiKey);
 
         map.setOnEnableScrollWithZoomLevelListener(new TMapView.OnEnableScrollWithZoomLevelCallback() {
             @Override
@@ -178,9 +180,11 @@ public class MapApiImpl extends BaseMapApi {
     @Override
     public MapPolygon addPolygon(List<MapPoint> list, int strokeColor, int fillColor, float zIndex) {
         TMapPolygon polygon = new TMapPolygon();
-        polygon.setPolygonWidth(10);
+        polygon.setPolygonWidth(0);
         polygon.setLineColor(strokeColor);
-        polygon.setAreaColor(Color.parseColor("#44000000"));
+        polygon.setLineAlpha(0);
+        polygon.setAreaColor(Color.parseColor("#000000"));
+        polygon.setAreaAlpha(50);
 
         for (LatLng outerBound : createOuterBounds()) {
             polygon.addPolygonPoint(new TMapPoint(outerBound.latitude, outerBound.longitude));
@@ -192,6 +196,7 @@ public class MapApiImpl extends BaseMapApi {
 
         int id = polygonList.size() + 1;
         map.addTMapPolygon(String.valueOf(id), polygon);
+        polygonList.add(polygon);
 
         return new MapPolygonImpl(map, polygon);
     }
@@ -199,9 +204,11 @@ public class MapApiImpl extends BaseMapApi {
     @Override
     public MapPolygon addMultiPolygon(List<List<MapPoint>> list, int strokeColor, int fillColor, float zIndex) {
         TMapPolygon polygon = new TMapPolygon();
-        polygon.setPolygonWidth(10);
+        polygon.setPolygonWidth(0);
         polygon.setLineColor(strokeColor);
-        polygon.setAreaColor(Color.parseColor("#44000000"));
+        polygon.setLineAlpha(0);
+        polygon.setAreaColor(Color.parseColor("#000000"));
+        polygon.setAreaAlpha(50);
 
         for (LatLng outerBound : createOuterBounds()) {
             polygon.addPolygonPoint(new TMapPoint(outerBound.latitude, outerBound.longitude));
@@ -215,6 +222,7 @@ public class MapApiImpl extends BaseMapApi {
 
         int id = polygonList.size() + 1;
         map.addTMapPolygon(String.valueOf(id), polygon);
+        polygonList.add(polygon);
 
         return new MapPolygonImpl(map, polygon);
     }
@@ -265,10 +273,12 @@ public class MapApiImpl extends BaseMapApi {
         if (includes.size() == 0) {
             return;
         }
+
         final LatLngBounds.Builder latlngBuilder = new LatLngBounds.Builder();
         for (MapPoint point : includes) {
             latlngBuilder.include(new LatLng(point.getLatitude(), point.getLongitude()));
         }
+
 
         mapFragment.getView().post(new Runnable() {
             @Override
@@ -280,26 +290,26 @@ public class MapApiImpl extends BaseMapApi {
                 map.setPadding(0, paddingInDp, 0, viewSize);
                 if (Math.abs(bounds.northeast.latitude - bounds.southwest.latitude) > Math.abs(bounds.northeast.longitude - bounds.southwest.longitude)) {
                     // 세로
-                    zoomLevel -= (2 + (viewSize / 100));
+                    zoomLevel -= (3 + (viewSize / 100));
                 } else {
                     // 가로
-                    zoomLevel -= (1 + (paddingInDp / 100));
+                    zoomLevel -= (2 + (paddingInDp / 100));
                 }
 
                 int finalZoomLevel = zoomLevel;
                 Runnable r = () -> {
-                    /*if (animate) {
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), finalZoomLevel));
-                    } else {
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), finalZoomLevel));
-                    }*/
+                    setCenter(new MapPoint(bounds.getCenter().latitude, bounds.getCenter().longitude), animate);
+                    map.setZoomLevel(finalZoomLevel);
+//                    if (map.getZoomLevel() < finalZoomLevel) {
+//                        for (int i = map.getZoomLevel(); i < finalZoomLevel; i++) {
+//                            map.MapZoomIn();
+//                        }
+//                    }
+//
+//                    if (zoomListener != null)
+//                        zoomListener.run();
 
-                    map.setCenterPoint(bounds.getCenter().latitude, bounds.getCenter().longitude, animate);
-
-                    if (zoomListener != null)
-                        zoomListener.run();
-
-                    map.setPadding(0, paddingInDp, 0, viewSize);
+                    map.setPadding(0, 0, 0, 0);
                 };
 
                 if (!mapLoadedRun.isFired()) {
@@ -347,18 +357,16 @@ public class MapApiImpl extends BaseMapApi {
     @Override
     public MapPolyLine addPolyline(List<MapPoint> points, int color, int width) {
         TMapPolyLine polyline = new TMapPolyLine();
-        polyline.setLineColor(color);
-        polyline.setLineWidth(width);
+        polyline.setLineColor(Color.BLUE);
+        polyline.setLineWidth(20);
 
         for (MapPoint point : points) {
             polyline.addLinePoint(new TMapPoint(point.getLatitude(), point.getLongitude()));
         }
-        for (LatLng latLng : convertToLatLng(points)) {
-            polyline.addLinePoint(new TMapPoint(latLng.latitude, latLng.longitude));
-        }
 
         int id = polylineList.size() + 1;
         map.addTMapPolyLine(String.valueOf(id), polyline);
+        polylineList.add(polyline);
 
         return new MapPolyLineImpl(map, polyline);
     }
@@ -385,6 +393,7 @@ public class MapApiImpl extends BaseMapApi {
         circle.setLineColor(strokeColor);
         circle.setAreaColor(fillColor);
         circle.setCircleWidth(strokeWidth);
+        circle.setAreaAlpha(50);
 
         int id = circleList.size() + 1;
         map.addTMapCircle(String.valueOf(id), circle);

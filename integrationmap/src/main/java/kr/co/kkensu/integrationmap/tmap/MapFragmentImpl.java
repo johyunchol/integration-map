@@ -25,25 +25,27 @@ import kr.co.kkensu.maptest.R;
 public class MapFragmentImpl extends Fragment implements MapFragment {
 
     private Context context;
+    private String apiKey;
     private TMapView tMapView;
     private View.OnTouchListener listener;
     private TouchableWrapper touchableWrapper;
     private ScrollView scrollView;
 
-    public MapFragmentImpl(Context context) {
+    public MapFragmentImpl(Context context, String apiKey) {
         this.context = context;
+        this.apiKey = apiKey;
     }
 
     @Override
     public void getMapApi(final MapApi.MapCallback<MapApi> callback) {
-        callback.handle(new MapApiImpl(new TMapView(context), MapFragmentImpl.this));
+        tMapView = new TMapView(context);
+        callback.handle(new MapApiImpl(tMapView, MapFragmentImpl.this, apiKey));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tmap_view, container, false);
         ViewGroup viewGroup = view.findViewById(R.id.tmapView);
-        tMapView = new TMapView(getActivity());
         viewGroup.addView(tMapView);
 
         touchableWrapper = new TouchableWrapper(getActivity());

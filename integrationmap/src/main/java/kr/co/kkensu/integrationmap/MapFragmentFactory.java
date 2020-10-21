@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
+import kr.co.kkensu.maptest.R;
+
 /**
  * 지도 종류에 따른 MapFragment 반환
  */
@@ -24,7 +26,7 @@ public class MapFragmentFactory {
                 break;
 
             case TMAP:
-                fragment = new kr.co.kkensu.integrationmap.tmap.MapFragmentImpl(context);
+                fragment = new kr.co.kkensu.integrationmap.tmap.MapFragmentImpl(context, context.getString(R.string.tmap_api_key));
                 break;
         }
         return fragment;

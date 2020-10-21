@@ -3,5 +3,5 @@
 
     <string name="google_map_api_key"></string>
     <string name="naver_client_id"></string>
-    <string name="tmap_api_key">2b128a6d-c516-4e18-a837-2aae0bf4a3c8</string>
+    <string name="tmap_api_key"></string>
 </resources>

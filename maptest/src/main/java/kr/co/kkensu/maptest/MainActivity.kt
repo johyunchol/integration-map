@@ -45,6 +45,15 @@ class MainActivity : AppCompatActivity() {
             mapType = MapType.NAVER_MAP
             initMap()
         }
+
+        btnTMap.setOnClickListener {
+            if (mapType == MapType.TMAP) {
+                return@setOnClickListener
+            }
+
+            mapType = MapType.TMAP
+            initMap()
+        }
     }
 
     private fun initMap() {
@@ -76,7 +85,8 @@ class MainActivity : AppCompatActivity() {
             list.add(MapPoint(37.505190, 127.045111))
             polyLine = mapApi?.addPolyline(list)
 
-            mapApi?.zoom(list)
+//            mapApi?.center = MapPoint(37.505497, 127.0443695)
+            mapApi?.zoom(list, 0, 0, true)
         }
 
         btnCircle.setOnClickListener {
@@ -85,21 +95,27 @@ class MainActivity : AppCompatActivity() {
             val mapPoint = MapPoint(37.507860, 127.040302)
             val list: MutableList<MapPoint> = ArrayList()
             list.add(mapPoint)
-            circle = mapApi?.addCircle(mapPoint, 50f)
+            circle =
+                mapApi?.addCircle(mapPoint, 50f, Color.parseColor("#44000000"), 10f, Color.BLUE)
 
-            mapApi?.zoom(list)
+//            mapApi?.center = mapPoint
+            mapApi?.zoom(list, 0, 0, true)
         }
 
         btnPolygon.setOnClickListener {
             removeAll()
+
             val list2: MutableList<MapPoint> = ArrayList()
             list2.add(MapPoint(37.506479, 127.041939))
             list2.add(MapPoint(37.506049, 127.043099))
             list2.add(MapPoint(37.504290, 127.043202))
             list2.add(MapPoint(37.505487, 127.041398))
+            list2.add(MapPoint(37.506479, 127.041939))
             polygon = mapApi?.addPolygon(list2)
 
-            mapApi?.zoom(list2)
+//            mapApi?.zoom(list2)
+//            mapApi?.center = MapPoint(37.506479, 127.041939)
+            mapApi?.zoom(list2, 0, 0, true)
         }
 
         btnMultiPolygon.setOnClickListener {
@@ -111,6 +127,7 @@ class MainActivity : AppCompatActivity() {
             list4.add(MapPoint(37.506049, 127.043099))
             list4.add(MapPoint(37.504290, 127.043202))
             list4.add(MapPoint(37.505487, 127.041398))
+            list4.add(MapPoint(37.506479, 127.041939))
             list3.add(list4)
 
             val list5: MutableList<MapPoint> = ArrayList()
@@ -119,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             list5.add(MapPoint(37.504024, 127.046335))
             list5.add(MapPoint(37.504168, 127.043331))
             list5.add(MapPoint(37.505282, 127.045381))
+            list5.add(MapPoint(37.505896, 127.046413))
             list3.add(list5)
             multiPolygon = mapApi?.addMultiPolygon(
                 list3,
@@ -131,7 +149,11 @@ class MainActivity : AppCompatActivity() {
             list.addAll(list4)
             list.addAll(list5)
 
-            mapApi?.zoom(list)
+//            mapApi?.center = MapPoint(37.504024, 127.046335)
+
+//            mapApi?.zoom(list)
+            mapApi?.zoom(list, 0, 0, true)
+
         }
     }
 
