@@ -6,7 +6,7 @@ public class MapMarkerOptions {
     private MapPoint mapPoint = null;
     private MapMarkerIcon mapMarkerIcon = null;
     private float anchorX = 0.5f;
-    private float anchorY = 0.5f;
+    private float anchorY = 1f;
     private float rotation = 0f;
     private int zIndex = 0;
     private MapMarkerClickListener mapMarkerClickListener = null;
