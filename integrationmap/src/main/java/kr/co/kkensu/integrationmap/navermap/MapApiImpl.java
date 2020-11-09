@@ -228,7 +228,6 @@ public class MapApiImpl extends BaseMapApi {
     public void setCenter(final MapPoint center, final float zoomLevel, boolean animate) {
         if (center == null) return;
 
-        isMoving = true;
         if (animate) {
             map.moveCamera(CameraUpdate.scrollAndZoomTo(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel).animate(CameraAnimation.Easing).finishCallback(finishCallback));
         } else {
