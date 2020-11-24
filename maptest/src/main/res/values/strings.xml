@@ -2,6 +2,6 @@
     <string name="app_name">IntegrationMap</string>
 
     <string name="google_map_api_key"></string>
-    <string name="naver_client_id"></string>
+    <string name="naver_client_id">5dltbo5hnv</string>
     <string name="tmap_api_key"></string>
 </resources>

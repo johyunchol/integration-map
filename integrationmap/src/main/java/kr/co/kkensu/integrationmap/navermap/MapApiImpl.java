@@ -56,7 +56,6 @@ public class MapApiImpl extends BaseMapApi {
     private NaverMap map;
     private MapFragmentImpl mapFragment;
     private MapPoint lastMapPoint;
-    private boolean isMoving;
     private OnCameraMoveListener cameraMoveListener;
     private View.OnTouchListener touchListener;
     private MapCallback<MapPoint> userRegisteredOnClickListener;
@@ -84,24 +83,20 @@ public class MapApiImpl extends BaseMapApi {
         map.addOnCameraIdleListener(new NaverMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                isMoving = false;
-                Log.e("TAG", "onCameraIdle");
                 if (cameraMoveListener != null) {
                     lastMapPoint = null;
                     lastZoomLevel = (float) map.getCameraPosition().zoom;
-                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
+                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, false);
                 }
             }
         });
         map.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(int i, boolean animated) {
-                isMoving = true;
-                Log.e("TAG", "onCameraChange");
                 if (cameraMoveListener != null) {
                     lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
                     lastZoomLevel = (float) map.getCameraPosition().zoom;
-                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
+                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, true);
                 }
             }
         });
@@ -248,7 +243,6 @@ public class MapApiImpl extends BaseMapApi {
 
     @Override
     public void scrollBy(int x, int y, boolean animate) {
-        isMoving = true;
         if (animate) {
             map.moveCamera((CameraUpdate.scrollBy(new PointF(x, y)).animate(CameraAnimation.Easing)).finishCallback(finishCallback));
         } else {
@@ -272,7 +266,6 @@ public class MapApiImpl extends BaseMapApi {
             public void run() {
 
                 Runnable r = () -> {
-                    isMoving = true;
                     if (animate) {
                         map.moveCamera(CameraUpdate.fitBounds(latlngBuilder.build(), paddingInDp).animate(CameraAnimation.Easing).finishCallback(finishCallback));
                     } else {
@@ -300,7 +293,6 @@ public class MapApiImpl extends BaseMapApi {
     private CameraUpdate.FinishCallback finishCallback = new CameraUpdate.FinishCallback() {
         @Override
         public void onCameraUpdateFinish() {
-            isMoving = false;
             if (lastMapPoint != null && cameraMoveListener != null) {
                 cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, false);
             }
@@ -505,7 +497,6 @@ public class MapApiImpl extends BaseMapApi {
     public void setCamera(MapPoint center, float bearing, float tilt, float zoomLevel, boolean animate) {
         CameraPosition cameraPosition = new CameraPosition(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel, tilt, bearing);
 
-        isMoving = true;
         if (animate) {
             map.moveCamera(CameraUpdate.toCameraPosition(cameraPosition).animate(CameraAnimation.Easing).finishCallback(finishCallback));
         } else {
@@ -526,7 +517,6 @@ public class MapApiImpl extends BaseMapApi {
 
     @Override
     public void setZoomLevel(final float level) {
-        isMoving = true;
         map.moveCamera(CameraUpdate.scrollAndZoomTo(map.getCameraPosition().target, level).finishCallback(finishCallback));
     }
 
