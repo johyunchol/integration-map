@@ -3,6 +3,7 @@ package kr.co.kkensu.integrationmap.navermap;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,15 +81,25 @@ public class MapApiImpl extends BaseMapApi {
 
     public MapApiImpl(NaverMap naverMap, MapFragmentImpl mapFragment) {
         map = naverMap;
+        map.addOnCameraIdleListener(new NaverMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                isMoving = false;
+                Log.e("TAG", "onCameraIdle");
+                if (cameraMoveListener != null) {
+                    lastMapPoint = null;
+                    lastZoomLevel = (float) map.getCameraPosition().zoom;
+                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
+                }
+            }
+        });
         map.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(int i, boolean animated) {
+                isMoving = true;
+                Log.e("TAG", "onCameraChange");
                 if (cameraMoveListener != null) {
-                    if (!isMoving) {
-                        lastMapPoint = null;
-                    } else {
-                        lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
-                    }
+                    lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
                     lastZoomLevel = (float) map.getCameraPosition().zoom;
                     cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, isMoving);
                 }
@@ -98,25 +109,25 @@ public class MapApiImpl extends BaseMapApi {
         map.setOnMapClickListener(mapOnClickListener);
         this.mapFragment = mapFragment;
 
-        mapFragment.setTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN) {
-                    isMoving = true;
-                } else if (action == MotionEvent.ACTION_UP) {
-                    isMoving = false;
-                    if (lastMapPoint != null && cameraMoveListener != null) {
-                        cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, false);
-                    }
-                } else {
-                    isMoving = true;
+//        mapFragment.setTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int action = event.getAction();
+//                if (action == MotionEvent.ACTION_DOWN) {
+//                    isMoving = true;
+//                } else if (action == MotionEvent.ACTION_UP) {
+//                    isMoving = false;
+//                    if (lastMapPoint != null && cameraMoveListener != null) {
+//                        cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, false);
+//                    }
+//                } else {
+//                    isMoving = true;
 //                    if (cameraMoveListener != null)
 //                        cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, true);
-                }
-                return touchListener != null && touchListener.onTouch(v, event);
-            }
-        });
+//                }
+//                return touchListener != null && touchListener.onTouch(v, event);
+//            }
+//        });
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.getUiSettings().setCompassEnabled(false);
         map.getUiSettings().setTiltGesturesEnabled(false);
@@ -282,45 +293,6 @@ public class MapApiImpl extends BaseMapApi {
                 } else {
                     r.run();
                 }
-
-                /*final LatLngBounds bounds = latlngBuilder.build();
-
-                int zoomLevel = getBoundsZoomLevel(bounds.getNorthEast(), bounds.getSouthWest(), mapFragment.getView().getWidth(), mapFragment.getView().getHeight());
-
-                map.setContentPadding(0, paddingInDp, 0, viewSize);
-                if (Math.abs(bounds.getNorthEast().latitude - bounds.getSouthWest().latitude) > Math.abs(bounds.getNorthEast().longitude - bounds.getSouthWest().longitude)) {
-                    // 세로
-                    zoomLevel -= (2 + (viewSize / 100));
-                } else {
-                    // 가로
-                    zoomLevel -= (1 + (paddingInDp / 100));
-                }
-
-                int finalZoomLevel = zoomLevel;
-                Runnable r = () -> {
-                    isMoving = true;
-                    if (animate) {
-                        map.moveCamera(CameraUpdate.scrollAndZoomTo(bounds.getCenter(), finalZoomLevel).animate(CameraAnimation.Easing));
-                    } else {
-                        map.moveCamera(CameraUpdate.scrollAndZoomTo(bounds.getCenter(), finalZoomLevel));
-                    }
-
-                    if (zoomListener != null)
-                        zoomListener.run();
-
-                    map.setContentPadding(0, paddingInDp, 0, viewSize);
-                };
-
-                if (!mapLoadedRun.isFired()) {
-                    mapLoadedRun.post(new TimerTask() {
-                        @Override
-                        public void run() {
-                            r.run();
-                        }
-                    });
-                } else {
-                    r.run();
-                }*/
             }
         });
     }

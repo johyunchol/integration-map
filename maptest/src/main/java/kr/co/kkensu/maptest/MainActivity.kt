@@ -2,8 +2,7 @@ package kr.co.kkensu.maptest
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,7 +13,7 @@ import kr.co.kkensu.integrationmap.*
 class MainActivity : AppCompatActivity() {
 
     private var mapApi: MapApi? = null
-    private var mapType = MapType.GOOGLE_MAP
+    private var mapType = MapType.NAVER_MAP
 
     private var polyLine: MapPolyLine? = null
     private var circle: MapCircle? = null
@@ -169,6 +168,10 @@ class MainActivity : AppCompatActivity() {
 //            mapApi?.zoom(list)
             mapApi?.zoom(list, 0, 0, true)
 
+        }
+
+        mapApi?.setOnCameraMoveListener { center, zoomLevel, isMoving ->
+//            Log.e("JHC_DEBUG", "isMoving : " + isMoving)
         }
     }
 
