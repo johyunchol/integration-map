@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         mapApi?.setOnCameraMoveListener { center, zoomLevel, isMoving ->
-//            Log.e("JHC_DEBUG", "isMoving : " + isMoving)
+//            Log.e("JHC_DEBUG", "isMoving : $isMoving")
         }
     }
 

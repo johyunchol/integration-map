@@ -104,37 +104,12 @@ public class MapApiImpl extends BaseMapApi {
         map.setOnMapClickListener(mapOnClickListener);
         this.mapFragment = mapFragment;
 
-//        mapFragment.setTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                int action = event.getAction();
-//                if (action == MotionEvent.ACTION_DOWN) {
-//                    isMoving = true;
-//                } else if (action == MotionEvent.ACTION_UP) {
-//                    isMoving = false;
-//                    if (lastMapPoint != null && cameraMoveListener != null) {
-//                        cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, false);
-//                    }
-//                } else {
-//                    isMoving = true;
-//                    if (cameraMoveListener != null)
-//                        cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, true);
-//                }
-//                return touchListener != null && touchListener.onTouch(v, event);
-//            }
-//        });
         map.getUiSettings().setRotateGesturesEnabled(false);
         map.getUiSettings().setCompassEnabled(false);
         map.getUiSettings().setTiltGesturesEnabled(false);
         map.getUiSettings().setZoomControlEnabled(false);
 
         mapLoadedRun.fire();
-        /*map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                mapLoadedRun.fire();
-            }
-        });*/
     }
 
     public static List<MapPoint> convertToMapPoint(List<LatLng> list) {
@@ -235,18 +210,18 @@ public class MapApiImpl extends BaseMapApi {
         if (center == null) return;
 
         if (animate) {
-            map.moveCamera(CameraUpdate.scrollAndZoomTo(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel).animate(CameraAnimation.Easing).finishCallback(finishCallback));
+            map.moveCamera(CameraUpdate.scrollAndZoomTo(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel).animate(CameraAnimation.Easing));
         } else {
-            map.moveCamera(CameraUpdate.scrollAndZoomTo(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel).finishCallback(finishCallback));
+            map.moveCamera(CameraUpdate.scrollAndZoomTo(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel));
         }
     }
 
     @Override
     public void scrollBy(int x, int y, boolean animate) {
         if (animate) {
-            map.moveCamera((CameraUpdate.scrollBy(new PointF(x, y)).animate(CameraAnimation.Easing)).finishCallback(finishCallback));
+            map.moveCamera((CameraUpdate.scrollBy(new PointF(x, y)).animate(CameraAnimation.Easing)));
         } else {
-            map.moveCamera((CameraUpdate.scrollBy(new PointF(x, y))).finishCallback(finishCallback));
+            map.moveCamera((CameraUpdate.scrollBy(new PointF(x, y))));
         }
     }
 
@@ -267,9 +242,9 @@ public class MapApiImpl extends BaseMapApi {
 
                 Runnable r = () -> {
                     if (animate) {
-                        map.moveCamera(CameraUpdate.fitBounds(latlngBuilder.build(), paddingInDp).animate(CameraAnimation.Easing).finishCallback(finishCallback));
+                        map.moveCamera(CameraUpdate.fitBounds(latlngBuilder.build(), paddingInDp).animate(CameraAnimation.Easing));
                     } else {
-                        map.moveCamera(CameraUpdate.fitBounds(latlngBuilder.build(), paddingInDp).finishCallback(finishCallback));
+                        map.moveCamera(CameraUpdate.fitBounds(latlngBuilder.build(), paddingInDp));
                     }
 
                     if (zoomListener != null)
@@ -289,16 +264,7 @@ public class MapApiImpl extends BaseMapApi {
             }
         });
     }
-
-    private CameraUpdate.FinishCallback finishCallback = new CameraUpdate.FinishCallback() {
-        @Override
-        public void onCameraUpdateFinish() {
-            if (lastMapPoint != null && cameraMoveListener != null) {
-                cameraMoveListener.onMove(lastMapPoint, lastZoomLevel, false);
-            }
-        }
-    };
-
+    
     public static int getBoundsZoomLevel(LatLng northeast, LatLng southwest, int width, int height) {
         final int GLOBE_WIDTH = 256; // a constant in Google's map projection
         final int ZOOM_MAX = 21;
@@ -498,9 +464,9 @@ public class MapApiImpl extends BaseMapApi {
         CameraPosition cameraPosition = new CameraPosition(new LatLng(center.getLatitude(), center.getLongitude()), zoomLevel, tilt, bearing);
 
         if (animate) {
-            map.moveCamera(CameraUpdate.toCameraPosition(cameraPosition).animate(CameraAnimation.Easing).finishCallback(finishCallback));
+            map.moveCamera(CameraUpdate.toCameraPosition(cameraPosition).animate(CameraAnimation.Easing));
         } else {
-            map.moveCamera(CameraUpdate.toCameraPosition(cameraPosition).finishCallback(finishCallback));
+            map.moveCamera(CameraUpdate.toCameraPosition(cameraPosition));
         }
     }
 
@@ -517,7 +483,7 @@ public class MapApiImpl extends BaseMapApi {
 
     @Override
     public void setZoomLevel(final float level) {
-        map.moveCamera(CameraUpdate.scrollAndZoomTo(map.getCameraPosition().target, level).finishCallback(finishCallback));
+        map.moveCamera(CameraUpdate.scrollAndZoomTo(map.getCameraPosition().target, level));
     }
 
     @Override
