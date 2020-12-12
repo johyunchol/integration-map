@@ -1,13 +1,9 @@
 package kr.co.kkensu.integrationmap.navermap;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -18,7 +14,6 @@ import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.overlay.CircleOverlay;
-import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.OverlayImage;
@@ -33,20 +28,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
 
-import kr.co.kkensu.integrationmap.AnchorType;
 import kr.co.kkensu.integrationmap.BaseMapApi;
 import kr.co.kkensu.integrationmap.MapCircle;
 import kr.co.kkensu.integrationmap.MapInfoWindow;
 import kr.co.kkensu.integrationmap.MapMarker;
-import kr.co.kkensu.integrationmap.MapMarkerIcon;
 import kr.co.kkensu.integrationmap.MapMarkerOptions;
 import kr.co.kkensu.integrationmap.MapPoint;
 import kr.co.kkensu.integrationmap.MapPolyLine;
 import kr.co.kkensu.integrationmap.MapPolygon;
 import kr.co.kkensu.integrationmap.util.AsyncRun;
 import kr.co.kkensu.integrationmap.util.BitmapUtil;
-import kr.co.kkensu.integrationmap.util.ScreenUtil;
-import kr.co.kkensu.maptest.R;
 
 public class MapApiImpl extends BaseMapApi {
     public static final int ANIMATION_TIME = 300;
@@ -56,12 +47,15 @@ public class MapApiImpl extends BaseMapApi {
     private NaverMap map;
     private MapFragmentImpl mapFragment;
     private MapPoint lastMapPoint;
+    private boolean isMoving;
     private OnCameraMoveListener cameraMoveListener;
     private View.OnTouchListener touchListener;
     private MapCallback<MapPoint> userRegisteredOnClickListener;
     private boolean isTouchMoveEnable = true;
     private Runnable zoomListener;
     private HashMap<Marker, MapInfoWindow> mapMarkerInfoWindow = new HashMap<>();
+    private CameraUpdateReason reason;
+    private boolean isIdleSkip = true;
 
     private List<PolylineOverlay> polylineList = new ArrayList<>();
     private List<CircleOverlay> circleList = new ArrayList<>();
@@ -71,10 +65,13 @@ public class MapApiImpl extends BaseMapApi {
     private final NaverMap.OnMapClickListener mapOnClickListener = new NaverMap.OnMapClickListener() {
         @Override
         public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
-            if (isTouchMoveEnable)
+            if (isTouchMoveEnable) {
+                Log.e("JHC_DEBUG", "setCenter : " + pointF.toString());
                 setCenter(new MapPoint(latLng.latitude, latLng.longitude), true);
-            if (userRegisteredOnClickListener != null)
+            }
+            if (userRegisteredOnClickListener != null) {
                 userRegisteredOnClickListener.handle(new MapPoint(latLng.latitude, latLng.longitude));
+            }
         }
     };
 
@@ -83,21 +80,44 @@ public class MapApiImpl extends BaseMapApi {
         map.addOnCameraIdleListener(new NaverMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                if (cameraMoveListener != null) {
-                    lastMapPoint = null;
-                    lastZoomLevel = (float) map.getCameraPosition().zoom;
-                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, false);
+                if (cameraMoveListener == null) return;
+
+                switch (reason) {
+                    case REASON_DEVELOPER: {
+                        if (!isIdleSkip) {
+                            return;
+                        }
+
+                        isIdleSkip = false;
+                    }
+                    break;
+
+                    case REASON_GESTURE:
+                        // 사용자의 제스처로 이동
+                        break;
                 }
+
+                // API로 이동
+                lastMapPoint = null;
+                lastZoomLevel = (float) map.getCameraPosition().zoom;
+                cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, false);
             }
         });
         map.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
-            public void onCameraChange(int i, boolean animated) {
-                if (cameraMoveListener != null) {
-                    lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
-                    lastZoomLevel = (float) map.getCameraPosition().zoom;
-                    cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, true);
+            public void onCameraChange(int i, boolean b) {
+                reason = CameraUpdateReason.fromValue(i);
+                switch (reason) {
+                    case REASON_DEVELOPER:
+                        isIdleSkip = true;
+                        break;
                 }
+
+                if (cameraMoveListener == null) return;
+
+                lastMapPoint = new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude);
+                lastZoomLevel = (float) map.getCameraPosition().zoom;
+                cameraMoveListener.onMove(new MapPoint(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), lastZoomLevel, true);
             }
         });
 
@@ -264,7 +284,7 @@ public class MapApiImpl extends BaseMapApi {
             }
         });
     }
-    
+
     public static int getBoundsZoomLevel(LatLng northeast, LatLng southwest, int width, int height) {
         final int GLOBE_WIDTH = 256; // a constant in Google's map projection
         final int ZOOM_MAX = 21;
@@ -504,4 +524,32 @@ public class MapApiImpl extends BaseMapApi {
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setTiltGesturesEnabled(false);
     }
+
+    public enum CameraUpdateReason {
+        REASON_DEVELOPER(0),
+        REASON_GESTURE(-1),
+        REASON_CONTROL(-2),
+        REASON_LOCATION(-3),
+        ;
+
+        private final int value;
+
+        CameraUpdateReason(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static CameraUpdateReason fromValue(int value) {
+            for (CameraUpdateReason state : CameraUpdateReason.values()) {
+                if (state.value == value) {
+                    return state;
+                }
+            }
+            return REASON_DEVELOPER;
+        }
+    }
+
 }
