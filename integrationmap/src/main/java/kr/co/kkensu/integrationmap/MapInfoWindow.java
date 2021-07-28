@@ -1,17 +1,7 @@
 package kr.co.kkensu.integrationmap;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import kr.co.kkensu.integrationmap.util.LocationUtil;
-import kr.co.kkensu.integrationmap.util.TimeUtil;
-import kr.co.kkensu.maptest.R;
 
 /**
  * Created by johyunchol on 2017. 11. 6..

@@ -20,7 +20,7 @@ import com.skt.Tmap.TMapView;
 
 import kr.co.kkensu.integrationmap.MapApi;
 import kr.co.kkensu.integrationmap.MapFragment;
-import kr.co.kkensu.maptest.R;
+import kr.co.kkensu.integrationmap.R;
 
 public class MapFragmentImpl extends Fragment implements MapFragment {
 

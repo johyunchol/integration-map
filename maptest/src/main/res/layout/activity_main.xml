@@ -1,73 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <FrameLayout
-        android:id="@+id/map"
+    <data>
+
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnGoogleMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="구글맵" />
-
-        <Button
-            android:id="@+id/btnNaverMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="네이버맵" />
-
-        <Button
-            android:id="@+id/btnTMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="티맵" />
-
-    </LinearLayout>
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        <FrameLayout
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnPolyline"
+                android:id="@+id/btnGoogleMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="선그리기" />
+                android:text="구글맵" />
 
             <Button
-                android:id="@+id/btnCircle"
+                android:id="@+id/btnNaverMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="원그리기" />
+                android:text="네이버맵" />
 
             <Button
-                android:id="@+id/btnPolygon"
+                android:id="@+id/btnTMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="다각형그리기" />
+                android:text="티맵" />
 
-
-            <Button
-                android:id="@+id/btnMultiPolygon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="다각형 2개 그리기" />
         </LinearLayout>
-    </HorizontalScrollView>
-</RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPolyline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="선그리기" />
+
+                <Button
+                    android:id="@+id/btnCircle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원그리기" />
+
+                <Button
+                    android:id="@+id/btnPolygon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다각형그리기" />
+
+
+                <Button
+                    android:id="@+id/btnMultiPolygon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다각형 2개 그리기" />
+            </LinearLayout>
+        </HorizontalScrollView>
+    </RelativeLayout>
+</layout>

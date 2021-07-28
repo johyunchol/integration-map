@@ -4,8 +4,6 @@ import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
-import kr.co.kkensu.maptest.R;
-
 /**
  * 지도 종류에 따른 MapFragment 반환
  */

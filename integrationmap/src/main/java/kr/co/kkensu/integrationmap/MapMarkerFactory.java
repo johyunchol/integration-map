@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import kr.co.kkensu.maptest.R;
+import kr.co.kkensu.integrationmap.R;
 
 public class MapMarkerFactory {
 

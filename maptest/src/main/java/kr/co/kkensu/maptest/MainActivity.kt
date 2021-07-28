@@ -2,15 +2,17 @@ package kr.co.kkensu.maptest
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import kotlinx.android.synthetic.main.activity_main.*
 import kr.co.kkensu.integrationmap.*
+import kr.co.kkensu.maptest.*
+import kr.co.kkensu.maptest.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
+    private val binding : ActivityMainBinding by lazy { DataBindingUtil.setContentView(this, R.layout.activity_main) }
 
     private var mapApi: MapApi? = null
     private var mapType = MapType.NAVER_MAP
@@ -22,14 +24,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         initResources()
     }
 
     private fun initResources() {
         initMap()
-        btnGoogleMap.setOnClickListener {
+        binding.btnGoogleMap.setOnClickListener {
             if (mapType == MapType.GOOGLE_MAP) {
                 return@setOnClickListener
             }
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             initMap()
         }
 
-        btnNaverMap.setOnClickListener {
+        binding.btnNaverMap.setOnClickListener {
             if (mapType == MapType.NAVER_MAP) {
                 return@setOnClickListener
             }
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             initMap()
         }
 
-        btnTMap.setOnClickListener {
+        binding.btnTMap.setOnClickListener {
             if (mapType == MapType.TMAP) {
                 return@setOnClickListener
             }
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 //
 //            })
 
-        btnPolyline.setOnClickListener {
+        binding.btnPolyline.setOnClickListener {
             removeAll()
             val list: MutableList<MapPoint> = ArrayList()
             list.add(MapPoint(37.505804, 127.043628))
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        btnCircle.setOnClickListener {
+        binding.btnCircle.setOnClickListener {
             removeAll()
 
             val mapPoint = MapPoint(37.507860, 127.040302)
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             mapApi?.zoom(list, 0, 0, true)
         }
 
-        btnPolygon.setOnClickListener {
+        binding.btnPolygon.setOnClickListener {
             removeAll()
 
             val list2: MutableList<MapPoint> = ArrayList()
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             mapApi?.zoom(list2, 0, 0, true)
         }
 
-        btnMultiPolygon.setOnClickListener {
+        binding.btnMultiPolygon.setOnClickListener {
             removeAll()
             val list3: MutableList<MutableList<MapPoint>> = ArrayList()
 

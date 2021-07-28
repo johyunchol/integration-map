@@ -1,11 +1,8 @@
 package kr.co.kkensu.integrationmap.googlemap;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,20 +25,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
 
-import kr.co.kkensu.integrationmap.AnchorType;
 import kr.co.kkensu.integrationmap.BaseMapApi;
 import kr.co.kkensu.integrationmap.MapCircle;
 import kr.co.kkensu.integrationmap.MapInfoWindow;
 import kr.co.kkensu.integrationmap.MapMarker;
-import kr.co.kkensu.integrationmap.MapMarkerIcon;
 import kr.co.kkensu.integrationmap.MapMarkerOptions;
 import kr.co.kkensu.integrationmap.MapPoint;
 import kr.co.kkensu.integrationmap.MapPolyLine;
 import kr.co.kkensu.integrationmap.MapPolygon;
 import kr.co.kkensu.integrationmap.util.AsyncRun;
 import kr.co.kkensu.integrationmap.util.BitmapUtil;
-import kr.co.kkensu.integrationmap.util.ScreenUtil;
-import kr.co.kkensu.maptest.R;
 
 public class MapApiImpl extends BaseMapApi {
     public static final int ANIMATION_TIME = 300;

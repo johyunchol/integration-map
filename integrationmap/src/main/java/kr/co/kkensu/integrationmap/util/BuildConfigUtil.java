@@ -3,7 +3,7 @@ package kr.co.kkensu.integrationmap.util;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
-import kr.co.kkensu.maptest.BuildConfig;
+import kr.co.kkensu.integrationmap.BuildConfig;
 
 /**
  * 현재 빌드 설정이 무엇인지 알아내기 위한 util
