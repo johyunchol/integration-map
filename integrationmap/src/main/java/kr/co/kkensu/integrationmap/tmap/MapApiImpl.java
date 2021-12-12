@@ -10,11 +10,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.skt.Tmap.TMapCircle;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapMarkerItem2;
-import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapPolygon;
 import com.skt.Tmap.TMapView;
+import com.skt.Tmap.poi_item.TMapPOIItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
