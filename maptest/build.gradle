@@ -69,6 +69,6 @@ dependencies {
     implementation project(':integrationmap')
 
     /** Tmap Sdk **/
-    implementation files('libs/com.skt.Tmap_1.66.jar')
+    implementation files('libs/com.skt.Tmap_1.70.jar')
 }
 apply plugin: 'com.google.gms.google-services'
